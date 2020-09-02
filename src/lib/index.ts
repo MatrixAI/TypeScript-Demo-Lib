@@ -1,1 +1,1 @@
-export { default } from '@library/Library'
+export { default } from '@library/Library';

@@ -1,11 +1,9 @@
 class Library {
-  parameterOne: string
+  parameterOne: string;
 
-  constructor(
-    parameterOne: string = 'Parameter',
-  ) {
-    this.parameterOne = parameterOne
+  constructor(parameterOne: string = 'Parameter') {
+    this.parameterOne = parameterOne;
   }
 }
 
-export default Library
+export default Library;

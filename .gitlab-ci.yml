@@ -28,9 +28,9 @@ jest:
 
 nix-dry:
   stage: check
+  image: registry.gitlab.com/matrixai/engineering/maintenance/gitlab-runner
   script:
-    - nix-shell ./shell.nix
-    - nix-build -v -v --dry-run ./nix/default.nix -A library
+    - nix-shell --packages nodejs-12_x.all --run "nix-build -v -v --dry-run ./nix/default.nix"
 
 npm-build:
   stage: build
@@ -41,7 +41,7 @@ npm-build:
 
 nix-build:
   stage: build
+  image: registry.gitlab.com/matrixai/engineering/maintenance/gitlab-runner
   script:
-    - nix-shell ./shell.nix
-    - nix-build ./nix/default.nix -A library -o result-0
+    - nix-shell --packages nodejs-12_x.all --run "nix-build ./nix/default.nix -o result-0"
 
