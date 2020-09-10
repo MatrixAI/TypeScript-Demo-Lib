@@ -1,6 +1,6 @@
 {
-  "name": "typescript-demo-lib",
-  "version": "0.0.2",
+  "name": "@matrixai/typescript-demo-lib",
+  "version": "0.0.1",
   "bin": {
     "typescript-demo-lib": "dist/bin/typescript-demo-lib.js"
   },
