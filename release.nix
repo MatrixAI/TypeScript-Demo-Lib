@@ -2,7 +2,7 @@
 
 with pkgs;
 rec {
-  application = callPackage ./default.nix {};
+  application = callPackage ./nix/default.nix {};
   docker = dockerTools.buildImage {
     name = application.name;
     contents = [ application ];

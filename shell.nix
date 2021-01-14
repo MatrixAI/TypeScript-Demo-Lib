@@ -20,12 +20,12 @@ in
       export PATH="$(pwd)/dist/bin:$(npm bin):$PATH"
 
       npm install
-      node2nix \
+      node2nix -d \
         --input package.json \
         --lock package-lock.json \
-        --node-env ./nix/node-env.nix \
-        --output ./nix/node-packages.nix \
-        --composition ./nix/default.nix \
+        --node-env ./nix/generated/node-env.nix \
+        --output ./nix/generated/node-packages.nix \
+        --composition ./nix/generated/node-composition.nix \
         --nodejs-${nodeVersion}
 
       mkdir --parents "$(pwd)/tmp"

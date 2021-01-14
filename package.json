@@ -2,7 +2,7 @@
   "name": "@matrixai/typescript-demo-lib",
   "version": "0.0.2",
   "bin": {
-    "typescript-demo-lib": "dist/bin/typescript-demo-lib.js"
+    "typescript-demo-lib": "bin/typescript-demo-lib"
   },
   "author": "Roger Qiu",
   "description": "TypeScript Demo Library Project",
@@ -13,6 +13,9 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "bin"
+  ],
   "scripts": {
     "build": "tsc",
     "ts-node": "ts-node -r tsconfig-paths/register",
