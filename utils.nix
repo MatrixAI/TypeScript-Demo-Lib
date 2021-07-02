@@ -44,7 +44,6 @@ rec {
       npm install
     '';
   });
-  pkgFetchVersion = "3.2";
   pkgBuilds = {
     "3.2" = {
       "linux-x64" = fetchurl {
@@ -65,9 +64,9 @@ rec {
       };
     };
   };
-  pkgCacheDir =
+  pkgCachePath =
     let
-      pkgBuild = pkgBuilds."${pkgFetchVersion}";
+      pkgBuild = pkgBuilds."3.2";
       fetchedName = n: builtins.replaceStrings ["node"] ["fetched"] n;
     in
       linkFarm "pkg-cache"
