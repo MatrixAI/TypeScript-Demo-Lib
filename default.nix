@@ -5,7 +5,7 @@
 let
   utils = callPackage ./utils.nix {};
   drv = runCommandNoCC
-    utils.node2nixDev.name
+    "${utils.basename}-${utils.node2nixDev.version}"
     {
       version = utils.node2nixDev.version;
       packageName = utils.node2nixDev.packageName;

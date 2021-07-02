@@ -9,13 +9,8 @@
 }:
 
 rec {
-  # nixPackageName
-  # packageName = builtins.replaceStrings ["/" "@"] ["_" ""] node2nixDev.packageName;
-  # name = "${builtins.replaceStrings ["/" "@"] ["_" ""] node2nixDev.packageName}-${node2nixDev.version}";
-
   # this removes the org scoping
   basename = builtins.baseNameOf node2nixDev.packageName;
-
   src = nix-gitignore.gitignoreSource [".git"] ./.;
   nodeVersion = builtins.elemAt (lib.versions.splitVersion nodejs.version) 0;
   node2nixDrv = dev: runCommandNoCC "node2nix" {} ''
