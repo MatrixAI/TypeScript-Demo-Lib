@@ -5,9 +5,19 @@ let
   utils = callPackage ./utils.nix {};
   # buildExe = arch:
   #   stdenv.mkDerivation rec {
-  #     # we need to know what the name of what we want to do is
-  #     # plus
-  #     name = "";
+  #     name = "${utils.basename}-${version}-win32-${arch}.exe";
+  #     version = utils.node2nixDev.version;
+  #     src = "${utils.node2nixDev}/lib/node_modules/${utils.node2nixDev.packageName}";
+  #     buildInputs = [
+  #       nodePackages."pkg"
+  #     ];
+  #     PKG_CACHE_DIR = utils.pkgCacheDir;
+  #     buildPhase = ''
+  #       # try building using pkg
+  #     '';
+  #     installPhase = ''
+  #       # copy the executable into the $out
+  #     '';
   #   };
 in
   rec {
