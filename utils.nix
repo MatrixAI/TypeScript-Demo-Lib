@@ -54,11 +54,11 @@ rec {
         url = "https://github.com/vercel/pkg-fetch/releases/download/v3.2/node-v14.17.0-win-x64";
         sha256 = "08wf9ldy33sac1vmhd575zf2fhrbci3wz88a9nwdbccsxrkbgklc";
       };
-      "darwin-x64" = fetchurl {
+      "macos-x64" = fetchurl {
         url = "https://github.com/vercel/pkg-fetch/releases/download/v3.2/node-v14.17.0-macos-x64";
         sha256 = "12pbdfvc5skxfldl9r3nz467myrpxbp2cr4pm8pvsnlspxy52jh7";
       };
-      "darwin-arm64" = fetchurl {
+      "macos-arm64" = fetchurl {
         url = "https://github.com/vercel/pkg-fetch/releases/download/v3.2/node-v14.17.0-macos-arm64";
         sha256 = "03kayr1gdg5shj07p1m66jklsz514yw7q5yqxw0shy62isdb3y3b";
       };
@@ -80,12 +80,12 @@ rec {
             path = pkgBuild.win32-x64;
           }
           {
-            name = fetchedName pkgBuild.darwin-x64.name;
-            path = pkgBuild.darwin-x64;
+            name = fetchedName pkgBuild.macos-x64.name;
+            path = pkgBuild.macos-x64;
           }
           {
-            name = fetchedName pkgBuild.darwin-arm64.name;
-            path = pkgBuild.darwin-arm64;
+            name = fetchedName pkgBuild.macos-arm64.name;
+            path = pkgBuild.macos-arm64;
           }
         ];
 }

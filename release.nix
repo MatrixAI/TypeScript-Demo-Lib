@@ -48,7 +48,7 @@ let
     };
   buildMacho = arch:
     stdenv.mkDerivation rec {
-      name = "${utils.basename}-${version}-darwin-${arch}.exe";
+      name = "${utils.basename}-${version}-macos-${arch}.exe";
       version = utils.node2nixDev.version;
       src = "${utils.node2nixDev}/lib/node_modules/${utils.node2nixDev.packageName}";
       buildInputs = [
