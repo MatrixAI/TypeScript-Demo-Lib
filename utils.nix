@@ -68,23 +68,24 @@ rec {
   pkgCacheDir =
     let
       pkgBuild = pkgBuilds."${pkgFetchVersion}";
+      fetchedName = n: builtins.replaceStrings ["node"] ["fetched"] n;
     in
       linkFarm "pkg-cache"
         [
           {
-            name = "fetched-${pkgBuild.linux-x64.name}";
+            name = fetchedName pkgBuild.linux-x64.name;
             path = pkgBuild.linux-x64;
           }
           {
-            name = "fetched-${pkgBuild.win32-x64.name}";
+            name = fetchedName pkgBuild.win32-x64.name;
             path = pkgBuild.win32-x64;
           }
           {
-            name = "fetched-${pkgBuild.darwin-x64.name}";
+            name = fetchedName pkgBuild.darwin-x64.name;
             path = pkgBuild.darwin-x64;
           }
           {
-            name = "fetched-${pkgBuild.darwin-arm64.name}";
+            name = fetchedName pkgBuild.darwin-arm64.name;
             path = pkgBuild.darwin-arm64;
           }
         ];

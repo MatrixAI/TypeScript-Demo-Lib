@@ -23,6 +23,7 @@ in
         Cmd = [ "/bin/typescript-demo-lib" ];
       };
     };
+    x = utils.pkgCacheDir;
     # package = {
     #   linux = {
     #     x64 = {
