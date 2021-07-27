@@ -26,6 +26,8 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@matrixai/polykey": "file:../js-polykey",
+    "@grpc/grpc-js": "^1.2.5",
     "@types/jest": "^26.0.20",
     "@types/node": "^13.13.1",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
