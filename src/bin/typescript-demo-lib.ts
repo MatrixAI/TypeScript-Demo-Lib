@@ -6,7 +6,7 @@ import NumPair from '../lib/NumPair';
 import { v4 as uuidv4 } from 'uuid';
 import { PolykeyClient } from '@matrixai/polykey/dist';
 import { clientPB } from '@matrixai/polykey/dist/client';
-import * as grpc from '@grpc/grpc-js';
+import { createMetadata } from "@matrixai/polykey/dist/client/utils";
 
 async function main(argv = process.argv): Promise<number> {
   // Print out command-line arguments
@@ -33,8 +33,8 @@ async function main(argv = process.argv): Promise<number> {
   await client.start({});
   const grpcClient = client.grpcClient;
   const emptyMessage = new clientPB.EmptyMessage();
-  const meta = new grpc.Metadata();
-  meta.add('password', 'password');
+  const meta = createMetadata();
+  meta.set('password', 'password');
   const res = await grpcClient.sessionRequestJWT(emptyMessage, meta);
   console.log(res.getToken());
 

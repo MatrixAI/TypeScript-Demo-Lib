@@ -20,13 +20,15 @@
     "lint": "eslint '{src,tests}/**/*.{js,ts}'",
     "lintfix": "eslint '{src,tests}/**/*.{js,ts}' --fix",
     "docs": "typedoc --out ./docs src && touch ./docs/.nojekyll",
-    "typescript-demo-lib": "ts-node -r tsconfig-paths/register src/bin/typescript-demo-lib.ts"
+    "typescript-demo-lib": "ts-node -r tsconfig-paths/register src/bin/typescript-demo-lib.ts",
+    "example": "npm run ts-node -- repl/agent.ts"
   },
   "dependencies": {
+    "@matrixai/polykey": "file:../../js-polykey",
+    "@matrixai/logger": "^2.0.1",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "@matrixai/polykey": "file:../js-polykey",
     "@grpc/grpc-js": "^1.2.5",
     "@types/jest": "^26.0.20",
     "@types/node": "^13.13.1",
