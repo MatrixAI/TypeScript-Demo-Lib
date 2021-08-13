@@ -24,7 +24,7 @@
     "example": "npm run ts-node -- repl/agent.ts"
   },
   "dependencies": {
-    "@matrixai/polykey": "file:../../js-polykey",
+    "@matrixai/polykey": "file:../js-polykey",
     "@matrixai/logger": "^2.0.1",
     "uuid": "^8.3.0"
   },
