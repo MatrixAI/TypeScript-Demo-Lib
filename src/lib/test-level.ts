@@ -11,6 +11,7 @@ async function testLevel(dir: string) {
   await db.put(key, value);
   process.stdout.write(key + ' ' + (await db.get(key)) + '\n');
   process.stdout.write('\n');
+  await db.close();
 }
 
 export default testLevel;
