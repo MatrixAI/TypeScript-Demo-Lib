@@ -4,11 +4,10 @@ with pkgs;
 let
   utils = callPackage ./utils.nix {};
 in
-  pkgs.mkShell {
+  mkShell {
     nativeBuildInputs = [
       nodejs
       utils.node2nix
-      utils.pkg
     ];
     PKG_CACHE_PATH = utils.pkgCachePath;
     PKG_IGNORE_TAG = 1;
@@ -24,18 +23,10 @@ in
       # Built executables and NPM executables
       export PATH="$(pwd)/dist/bin:$(npm bin):$PATH"
 
-      # pkg is installed in package.json
-      # this ensures that in nix-shell we are using the nix packaged versions
-      export PATH="${lib.makeBinPath
-        [
-          utils.pkg
-        ]
-      }:$PATH"
-
       # Enables npm link
       export npm_config_prefix=~/.npm
 
-      npm install
+      npm install --ignore-scripts
 
       set +v
     '';

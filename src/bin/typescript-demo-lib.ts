@@ -13,7 +13,7 @@ import { version, test } from '../utils';
 
 async function main(argv = process.argv): Promise<number> {
   // Print out command-line arguments
-  argv = argv.slice(2); // Removing prepended file paths.
+  argv = argv.slice(2); // Removing prepended file paths
   process.stdout.write('[' + argv.slice(0, 2).toString() + ']\n');
 
   // Create a new Library with the value someParam = 'new library'
