@@ -137,6 +137,7 @@ build:linux:
     reports:
       junit:
         - ./tmp/junit.xml
+    paths:
       # Only the build:linux preserves the dist
       - ./dist
   rules:
