@@ -416,7 +416,7 @@ integration:prerelease:
             builds/*-linux-* \
             builds/*-win-* \
             builds/*-macos-* \
-            --title "Build-$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+            --title "${CI_COMMIT_TAG}-$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
             --notes "" \
             --prerelease \
             --target staging \
@@ -533,7 +533,7 @@ release:distribution:
           builds/*-linux-* \
           builds/*-win-* \
           builds/*-macos-* \
-          --title "Build-$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+          --title "${CI_COMMIT_TAG}-$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
           --notes "" \
           --target master \
           --repo "$GH_PROJECT_PATH";
