@@ -24,6 +24,7 @@
   "scripts": {
     "prepare": "tsc -p ./tsconfig.build.json",
     "build": "rimraf ./dist && tsc -p ./tsconfig.build.json",
+    "postversion": "npm install --package-lock-only --ignore-scripts --silent",
     "ts-node": "ts-node -r tsconfig-paths/register",
     "test": "jest",
     "lint": "eslint '{src,tests}/**/*.{js,ts}'",
