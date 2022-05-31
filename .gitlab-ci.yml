@@ -434,6 +434,12 @@ integration:merge:
   stage: integration
   needs:
     - build:merge
+    - job: build:linux
+      optional: true
+    - job: build:windows
+      optional: true
+    - job: build:macos
+      optional: true
     - job: integration:nix
       optional: true
     - job: integration:docker
