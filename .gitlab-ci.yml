@@ -123,9 +123,7 @@ build:merge:
 
 build:linux:
   stage: build
-  needs:
-    - job: check:lint
-      optional: true
+  needs: []
   script:
     - >
         nix-shell --run '
@@ -148,9 +146,7 @@ build:linux:
 
 build:windows:
   stage: build
-  needs:
-    - job: check:lint
-      optional: true
+  needs: []
   tags:
     - windows
   before_script:
@@ -176,9 +172,7 @@ build:windows:
 
 build:macos:
   stage: build
-  needs:
-    - job: check:lint
-      optional: true
+  needs: []
   tags:
     - shared-macos-amd64
   image: macos-11-xcode-12
