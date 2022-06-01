@@ -151,7 +151,6 @@ build:windows:
     - windows
   before_script:
     - choco install nodejs --version=16.14.2 -y
-    - choco install python --version=3.9.12 -y
     - refreshenv
   script:
     - npm config set msvs_version 2019
@@ -182,8 +181,6 @@ build:macos:
   before_script:
     - brew install node@16
     - brew link --overwrite node@16
-    - brew install python@3.9
-    - brew link --overwrite python@3.9
     - hash -r
   script:
     - npm install --ignore-scripts
