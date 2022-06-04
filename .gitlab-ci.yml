@@ -89,6 +89,7 @@ check:test:
       coverage_report:
         coverage_format: cobertura
         path: ./tmp/coverage/cobertura-coverage.xml
+  coverage: 'All files[^|]*\|[^|]*\s+([\d\.]+)'
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH =~ /^feature.*$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -144,6 +145,7 @@ build:linux:
     paths:
       # Only the build:linux preserves the dist
       - ./dist
+  coverage: 'All files[^|]*\|[^|]*\s+([\d\.]+)'
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
