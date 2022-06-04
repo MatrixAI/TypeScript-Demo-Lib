@@ -79,13 +79,16 @@ check:test:
     - >
         nix-shell --run '
         npm run build --verbose;
-        npm test -- --ci;
+        npm test -- --ci --coverage;
         '
   artifacts:
     when: always
     reports:
       junit:
-        - ./tmp/junit.xml
+        - ./tmp/junit/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./tmp/coverage/cobertura-coverage.xml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH =~ /^feature.*$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -128,13 +131,16 @@ build:linux:
     - >
         nix-shell --run '
         npm run build --verbose;
-        npm test -- --ci;
+        npm test -- --ci --coverage;
         '
   artifacts:
     when: always
     reports:
       junit:
-        - ./tmp/junit.xml
+        - ./tmp/junit/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./tmp/coverage/cobertura-coverage.xml
     paths:
       # Only the build:linux preserves the dist
       - ./dist
@@ -162,7 +168,7 @@ build:windows:
     when: always
     reports:
       junit:
-        - ./tmp/junit.xml
+        - ./tmp/junit/junit.xml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -191,7 +197,7 @@ build:macos:
     when: always
     reports:
       junit:
-        - ./tmp/junit.xml
+        - ./tmp/junit/junit.xml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
