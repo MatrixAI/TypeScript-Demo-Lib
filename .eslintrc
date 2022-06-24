@@ -143,6 +143,10 @@
         "trailingUnderscore": "allowSingleOrDouble"
       },
       {
+        "selector": "enumMember",
+        "format": ["PascalCase", "UPPER_CASE"]
+      },
+      {
         "selector": "objectLiteralProperty",
         "format": null
       },
