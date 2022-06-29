@@ -74,7 +74,6 @@ check:nix-dry:
 
 check:test-generate:
   stage: check
-  needs: []
   script:
     - mkdir -p ./tmp
     - >
