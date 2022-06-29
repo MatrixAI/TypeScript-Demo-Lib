@@ -72,24 +72,36 @@ check:nix-dry:
     - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != 'master' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
       when: manual
 
-check:test:
+check:test-generate:
   stage: check
-  needs: []
   script:
+    - mkdir -p ./tmp
     - >
         nix-shell --run '
-        npm run build --verbose;
-        npm test -- --ci --coverage;
+        ./scripts/test-pipelines.sh > ./tmp/test-pipelines.yml
         '
   artifacts:
     when: always
-    reports:
-      junit:
-        - ./tmp/junit/junit.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: ./tmp/coverage/cobertura-coverage.xml
-  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+    paths:
+      - ./tmp/test-pipelines.yml
+  rules:
+    # Runs on staging commits and ignores version commits
+    - if: $CI_COMMIT_BRANCH =~ /^feature.*$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
+    # Manually run on commits other than master and staging and ignore version commits
+    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH !~ /^(?:master|staging)$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
+      when: manual
+
+check:test:
+  stage: check
+  needs:
+    - check:test-generate
+  inherit:
+    variables: false
+  trigger:
+    include:
+      - artifact: tmp/test-pipelines.yml
+        job: check:test-generate
+    strategy: depend
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH =~ /^feature.*$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -125,82 +137,35 @@ build:merge:
     # Runs on tag pipeline where the tag is a prerelease or release version
     - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
 
-build:linux:
+build:build-generate:
   stage: build
-  needs: []
   script:
+    - mkdir -p ./tmp
     - >
         nix-shell --run '
-        npm run build --verbose;
-        npm test -- --ci --coverage;
+        ./scripts/build-pipelines.sh > ./tmp/build-pipelines.yml
         '
   artifacts:
     when: always
-    reports:
-      junit:
-        - ./tmp/junit/junit.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: ./tmp/coverage/cobertura-coverage.xml
     paths:
-      # Only the build:linux preserves the dist
-      - ./dist
-  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+      - ./tmp/build-pipelines.yml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
     # Runs on tag pipeline where the tag is a prerelease or release version
     - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
 
-build:windows:
+build:platforms:
   stage: build
-  needs: []
-  tags:
-    - windows
-  before_script:
-    - choco install nodejs --version=16.14.2 -y
-    - refreshenv
-  script:
-    - npm config set msvs_version 2019
-    - npm install --ignore-scripts
-    - $env:Path = "$(npm bin);" + $env:Path
-    - npm run build --verbose
-    - npm test -- --ci
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - ./tmp/junit/junit.xml
-  rules:
-    # Runs on staging commits and ignores version commits
-    - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
-    # Runs on tag pipeline where the tag is a prerelease or release version
-    - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
-
-build:macos:
-  stage: build
-  needs: []
-  tags:
-    - shared-macos-amd64
-  image: macos-11-xcode-12
-  variables:
-    HOMEBREW_NO_INSTALL_UPGRADE: "true"
-    HOMEBREW_NO_INSTALL_CLEANUP: "true"
-  before_script:
-    - eval "$(brew shellenv)"
-    - brew install node@16
-    - brew link --overwrite node@16
-    - hash -r
-  script:
-    - npm install --ignore-scripts
-    - export PATH="$(npm bin):$PATH"
-    - npm run build --verbose
-    - npm test -- --ci
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - ./tmp/junit/junit.xml
+  needs:
+    - build:build-generate
+  inherit:
+    variables: false
+  trigger:
+    include:
+      - artifact: tmp/build-pipelines.yml
+        job: build:build-generate
+    strategy: depend
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -210,9 +175,7 @@ build:macos:
 build:prerelease:
   stage: build
   needs:
-    - build:linux
-    - build:windows
-    - build:macos
+    - build:platforms
   # Don't interrupt publishing job
   interruptible: false
   before_script:
@@ -235,9 +198,7 @@ build:prerelease:
 integration:builds:
   stage: integration
   needs:
-    - build:linux
-    - build:windows
-    - build:macos
+    - build:platforms
   script:
     - mkdir -p ./builds
     - >
@@ -434,11 +395,7 @@ integration:merge:
   stage: integration
   needs:
     - build:merge
-    - job: build:linux
-      optional: true
-    - job: build:windows
-      optional: true
-    - job: build:macos
+    - job: build:platforms
       optional: true
     - job: integration:nix
       optional: true
@@ -514,9 +471,7 @@ release:deployment:tag:
 release:distribution:
   stage: release
   needs:
-    - build:linux
-    - build:windows
-    - build:macos
+    - build:platforms
     - integration:builds
     - integration:merge
     - release:deployment:tag
