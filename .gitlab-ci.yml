@@ -153,13 +153,13 @@ build:platforms-generate:
 build:platforms:
   stage: build
   needs:
-    - build:build-generate
+    - build:platforms-generate
   inherit:
     variables: false
   trigger:
     include:
       - artifact: tmp/build-pipelines.yml
-        job: build:build-generate
+        job: build:platforms-generate
     strategy: depend
   rules:
     # Runs on staging commits and ignores version commits
