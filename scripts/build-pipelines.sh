@@ -49,12 +49,15 @@ printf "\n"
 # Number of parallel shards to split the test suite into
 CI_PARALLEL=2
 
-
 cat << "EOF"
 build:linux:
   stage: build
   needs: []
+EOF
+cat << EOF
   parallel: $CI_PARALLEL
+EOF
+cat << "EOF"
   script:
     - >
         nix-shell --run '
@@ -78,7 +81,11 @@ cat << "EOF"
 build:windows:
   stage: build
   needs: []
+EOF
+cat << EOF
   parallel: $CI_PARALLEL
+EOF
+cat << "EOF"
   tags:
     - windows
   before_script:
@@ -103,7 +110,11 @@ cat << "EOF"
 build:macos:
   stage: build
   needs: []
+EOF
+cat << EOF
   parallel: $CI_PARALLEL
+EOF
+cat << "EOF"
   tags:
     - shared-macos-amd64
   image: macos-11-xcode-12

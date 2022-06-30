@@ -49,7 +49,11 @@ cat << "EOF"
 check:test:
   stage: check
   needs: []
+EOF
+cat << EOF
   parallel: $CI_PARALLEL
+EOF
+cat << "EOF"
   script:
     - >
         nix-shell --run '

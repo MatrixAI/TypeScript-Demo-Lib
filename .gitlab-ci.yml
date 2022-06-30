@@ -140,6 +140,7 @@ build:merge:
 
 build:platforms-generate:
   stage: build
+  needs: []
   script:
     - mkdir -p ./tmp
     - >
@@ -195,6 +196,7 @@ build:prerelease:
   stage: build
   needs:
     - build:dist
+    - build:platforms
   # Don't interrupt publishing job
   interruptible: false
   before_script:
@@ -218,6 +220,7 @@ integration:builds:
   stage: integration
   needs:
     - build:dist
+    - build:platforms
   script:
     - mkdir -p ./builds
     - >
@@ -416,6 +419,8 @@ integration:merge:
     - build:merge
     - job: build:dist
       optional: true
+    - job: build:platforms
+      optional: true
     - job: integration:nix
       optional: true
     - job: integration:docker
@@ -491,6 +496,7 @@ release:distribution:
   stage: release
   needs:
     - build:dist
+    - build:platforms
     - integration:builds
     - integration:merge
     - release:deployment:tag
