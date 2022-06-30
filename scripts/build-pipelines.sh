@@ -61,7 +61,7 @@ cat << "EOF"
   script:
     - >
         nix-shell --run '
-        npm run build --verbose
+        npm run build --verbose;
         npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL;
         '
   artifacts:
