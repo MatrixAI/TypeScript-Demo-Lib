@@ -79,12 +79,12 @@ check:test-generate:
     - mkdir -p ./tmp
     - >
         nix-shell --run '
-        ./scripts/check:test-generate.sh > ./tmp/check:test.yml
+        ./scripts/check-test-generate.sh > ./tmp/check-test.yml
         '
   artifacts:
     when: always
     paths:
-      - ./tmp/check:test.yml
+      - ./tmp/check-test.yml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH =~ /^feature.*$/ && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -100,7 +100,7 @@ check:test:
     variables: false
   trigger:
     include:
-      - artifact: tmp/check:test.yml
+      - artifact: tmp/check-test.yml
         job: check:test-generate
     strategy: depend
   rules:
@@ -145,12 +145,12 @@ build:platforms-generate:
     - mkdir -p ./tmp
     - >
         nix-shell --run '
-        ./scripts/build:platforms-generate.sh > ./tmp/build:platforms.yml
+        ./scripts/build-platforms-generate.sh > ./tmp/build-platforms.yml
         '
   artifacts:
     when: always
     paths:
-      - ./tmp/build:platforms.yml
+      - ./tmp/build-platforms.yml
   rules:
     # Runs on staging commits and ignores version commits
     - if: $CI_COMMIT_BRANCH == 'staging' && $CI_COMMIT_TITLE !~ /^[0-9]+\.[0-9]+\.[0-9]+(?:-.*[0-9]+)?$/
@@ -165,7 +165,7 @@ build:platforms:
     variables: false
   trigger:
     include:
-      - artifact: tmp/build:platforms.yml
+      - artifact: tmp/build-platforms.yml
         job: build:platforms-generate
     strategy: depend
   rules:
