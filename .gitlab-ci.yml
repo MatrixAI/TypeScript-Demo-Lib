@@ -41,6 +41,13 @@ stages:
 
 image: registry.gitlab.com/matrixai/engineering/maintenance/gitlab-runner
 
+dosomething:
+  script:
+    - cat | nix-shell --packages zsh --run /usr/bin/env zsh
+    - echo "$0"
+    - exit
+    - echo "$0"
+
 check:lint:
   stage: check
   needs: []
