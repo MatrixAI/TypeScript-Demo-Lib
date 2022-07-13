@@ -30,7 +30,7 @@
     "lint": "eslint '{src,tests}/**/*.{js,ts}'",
     "lintfix": "eslint '{src,tests}/**/*.{js,ts}' --fix",
     "docs": "rimraf ./docs && typedoc --gitRevision master --tsconfig ./tsconfig.build.json --out ./docs src",
-    "pkg": "./scripts/pkg.js --no-dict=leveldown.js",
+    "pkg": "node ./scripts/pkg.js --no-dict=leveldown.js",
     "typescript-demo-lib": "ts-node -r tsconfig-paths/register --compiler typescript-cached-transpile --transpile-only src/bin/typescript-demo-lib.ts"
   },
   "dependencies": {
