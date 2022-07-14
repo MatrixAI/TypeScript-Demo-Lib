@@ -89,7 +89,7 @@ cat << "EOF"
   tags:
     - windows
   before_script:
-    - choco install nodejs --version=16.15.0 -y
+    - choco install nodejs --version=16.15.1 -y
     - refreshenv
   script:
     - npm config set msvs_version 2019
