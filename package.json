@@ -25,14 +25,14 @@
     "prepare": "tsc -p ./tsconfig.build.json",
     "build": "rimraf ./dist && tsc -p ./tsconfig.build.json",
     "postversion": "npm install --package-lock-only --ignore-scripts --silent",
-    "ts-node": "ts-node -r tsconfig-paths/register",
+    "ts-node": "ts-node",
     "test": "jest",
     "lint": "eslint '{src,tests,scripts}/**/*.{js,ts}'",
     "lintfix": "eslint '{src,tests,scripts}/**/*.{js,ts}' --fix",
     "lint-shell": "find ./src ./tests ./scripts -type f -regextype posix-extended -regex '.*\\.(sh)' -exec shellcheck {} +",
     "docs": "rimraf ./docs && typedoc --gitRevision master --tsconfig ./tsconfig.build.json --out ./docs src",
     "pkg": "node ./scripts/pkg.js --no-dict=leveldown.js",
-    "typescript-demo-lib": "ts-node -r tsconfig-paths/register --compiler typescript-cached-transpile --transpile-only src/bin/typescript-demo-lib.ts"
+    "typescript-demo-lib": "ts-node src/bin/typescript-demo-lib.ts"
   },
   "dependencies": {
     "fd-lock": "^1.2.0",
@@ -42,6 +42,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.215",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
@@ -57,10 +58,9 @@
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.5",
-    "ts-node": "10.7.0",
+    "ts-node": "^10.9.1",
     "tsconfig-paths": "^3.9.0",
     "typedoc": "^0.22.15",
-    "typescript": "^4.5.2",
-    "typescript-cached-transpile": "0.0.6"
+    "typescript": "^4.5.2"
   }
 }
