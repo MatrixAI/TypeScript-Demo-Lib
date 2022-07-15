@@ -7,11 +7,15 @@ shopt -s nullglob
 cat << "EOF"
 default:
   interruptible: true
+  before_script:
+    # Replace this in windows runners that use powershell
+    # with `mkdir -Force "$CI_PROJECT_DIR/tmp"`
+    - mkdir -p "$CI_PROJECT_DIR/tmp"
 
 variables:
+  GIT_SUBMODULE_STRATEGY: "recursive"
   GH_PROJECT_PATH: "MatrixAI/${CI_PROJECT_NAME}"
   GH_PROJECT_URL: "https://${GITHUB_TOKEN}@github.com/${GH_PROJECT_PATH}.git"
-  GIT_SUBMODULE_STRATEGY: "recursive"
   # Cache .npm
   NPM_CONFIG_CACHE: "./tmp/npm"
   # Prefer offline node module installation
@@ -26,11 +30,15 @@ variables:
 # Cached directories shared between jobs & pipelines per-branch per-runner
 cache:
   key: $CI_COMMIT_REF_SLUG
+  # Preserve cache even if job fails
+  when: 'always'
   paths:
     - ./tmp/npm/
     - ./tmp/ts-node-cache/
     # Homebrew cache is only used by the macos runner
     - ./tmp/Homebrew
+    # Chocolatey cache is only used by the windows runner
+    - ./tmp/chocolatey/
     # `jest` cache is configured in jest.config.js
     - ./tmp/jest/
 
@@ -60,10 +68,9 @@ EOF
 cat << "EOF"
   script:
     - >
-        nix-shell --run '
-        npm run build --verbose;
-        npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL;
-        '
+      nix-shell --run '
+      npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL;
+      '
   artifacts:
     when: always
     reports:
@@ -89,19 +96,22 @@ cat << "EOF"
   tags:
     - windows
   before_script:
-    - choco install nodejs --version=16.15.1 -y
-    - refreshenv
+    - mkdir -Force "$CI_PROJECT_DIR/tmp"
   script:
-    - npm config set msvs_version 2019
+    - .\scripts\choco-install.ps1
+    - refreshenv
     - npm install --ignore-scripts
     - $env:Path = "$(npm bin);" + $env:Path
-    - npm run build --verbose
-    - npm test -- --ci --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
+    - npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL --maxWorkers=50%
   artifacts:
     when: always
     reports:
       junit:
         - ./tmp/junit/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./tmp/coverage/cobertura-coverage.xml
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 EOF
 
 printf "\n"
@@ -118,24 +128,22 @@ cat << "EOF"
   tags:
     - shared-macos-amd64
   image: macos-11-xcode-12
-  variables:
-    HOMEBREW_NO_INSTALL_UPGRADE: "true"
-    HOMEBREW_NO_INSTALL_CLEANUP: "true"
-  before_script:
-    - eval "$(brew shellenv)"
-    - brew install node@16
-    - brew link --overwrite node@16
-    - hash -r
   script:
+    - eval "$(brew shellenv)"
+    - ./scripts/brew-install.sh
+    - hash -r
     - npm install --ignore-scripts
     - export PATH="$(npm bin):$PATH"
-    - npm run build --verbose
-    - npm test -- --ci --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
+    - npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL --maxWorkers=50%
   artifacts:
     when: always
     reports:
       junit:
         - ./tmp/junit/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./tmp/coverage/cobertura-coverage.xml
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 EOF
 
 printf "\n"

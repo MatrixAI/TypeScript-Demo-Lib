@@ -7,12 +7,15 @@ in
   mkShell {
     nativeBuildInputs = [
       nodejs
-      utils.node2nix
+      shellcheck
+      gitAndTools.gh
+      skopeo
+      jq
     ];
     PKG_CACHE_PATH = utils.pkgCachePath;
     PKG_IGNORE_TAG = 1;
     shellHook = ''
-      echo 'Entering Typescript-Demo-Lib'
+      echo "Entering $(npm pkg get name)"
       set -o allexport
       . ./.env
       set +o allexport
@@ -22,9 +25,6 @@ in
 
       # Built executables and NPM executables
       export PATH="$(pwd)/dist/bin:$(npm bin):$PATH"
-
-      # Enables npm link
-      export npm_config_prefix=~/.npm
 
       npm install --ignore-scripts
 

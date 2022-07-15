@@ -18,6 +18,9 @@ Building the releases:
 ```sh
 nix-build ./release.nix --attr application
 nix-build ./release.nix --attr docker
+nix-build ./release.nix --attr package.linux.x64.elf
+nix-build ./release.nix --attr package.windows.x64.exe
+nix-build ./release.nix --attr package.macos.x64.macho
 ```
 
 Install into Nix user profile:
@@ -157,18 +160,6 @@ If you need to include multiple assets then add them as an array.
   }
 ```
 
-#### Integration into Nix
-
-Nix build uses node2nix to create the dependencies of the node modules. this does a fairly good job of detecting dependencies but with native modules it may fail to detect CLI tools like `node-gyp-build`.
-
-To ensure the proper dependencies exist while building we need to bring in these utilities during the build:
-
-```
-buildInputs = attrs.buildInputs ++ [ nodePackages.node-gyp-build ];
-```
-
-This has to be done to both `node2nixProd` and `node2nixDev`.
-
 ### Docs Generation
 
 ```sh
@@ -178,6 +169,26 @@ npm run docs
 See the docs at: https://matrixai.github.io/TypeScript-Demo-Lib/
 
 ### Publishing
+
+Publishing is handled automatically by the staging pipeline.
+
+Prerelease:
+
+```sh
+# npm login
+npm version prepatch --preid alpha # premajor/preminor/prepatch
+git push --follow-tags
+```
+
+Release:
+
+```sh
+# npm login
+npm version patch # major/minor/patch
+git push --follow-tags
+```
+
+Manually:
 
 ```sh
 # npm login
