@@ -20,10 +20,6 @@ variables:
   NPM_CONFIG_CACHE: "./tmp/npm"
   # Prefer offline node module installation
   NPM_CONFIG_PREFER_OFFLINE: "true"
-  # `ts-node` has its own cache
-  # It must use an absolute path, otherwise ts-node calls will CWD
-  TS_CACHED_TRANSPILE_CACHE: "${CI_PROJECT_DIR}/tmp/ts-node-cache"
-  TS_CACHED_TRANSPILE_PORTABLE: "true"
 
 # Cached directories shared between jobs & pipelines per-branch per-runner
 cache:
@@ -32,7 +28,6 @@ cache:
   when: 'always'
   paths:
     - ./tmp/npm/
-    - ./tmp/ts-node-cache/
     # Homebrew cache is only used by the macos runner
     - ./tmp/Homebrew
     # Chocolatey cache is only used by the windows runner
