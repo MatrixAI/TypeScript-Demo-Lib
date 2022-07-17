@@ -83,11 +83,6 @@ cat << "EOF"
 build:windows:
   stage: build
   needs: []
-EOF
-cat << EOF
-  parallel: $CI_PARALLEL
-EOF
-cat << "EOF"
   tags:
     - windows
   before_script:
@@ -97,7 +92,7 @@ cat << "EOF"
     - refreshenv
     - npm install --ignore-scripts
     - $env:Path = "$(npm bin);" + $env:Path
-    - npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL --maxWorkers=50%
+    - npm test -- --ci --coverage
   artifacts:
     when: always
     reports:
