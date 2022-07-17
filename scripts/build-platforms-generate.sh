@@ -3,15 +3,15 @@
 shopt -s globstar
 shopt -s nullglob
 
+# Using shards to optimise tests
+# In the future we can incorporate test durations rather than using
+# a static value for the parallel keyword
+
+# Number of parallel shards to split the test suite into
+CI_PARALLEL=2
+
 # Quote the heredoc to prevent shell expansion
 cat << "EOF"
-default:
-  interruptible: true
-  before_script:
-    # Replace this in windows runners that use powershell
-    # with `mkdir -Force "$CI_PROJECT_DIR/tmp"`
-    - mkdir -p "$CI_PROJECT_DIR/tmp"
-
 variables:
   GIT_SUBMODULE_STRATEGY: "recursive"
   GH_PROJECT_PATH: "MatrixAI/${CI_PROJECT_NAME}"
@@ -22,6 +22,13 @@ variables:
   NPM_CONFIG_PREFER_OFFLINE: "true"
   # Homebrew cache only used by macos runner
   HOMEBREW_CACHE: "${CI_PROJECT_DIR}/tmp/Homebrew"
+
+default:
+  interruptible: true
+  before_script:
+    # Replace this in windows runners that use powershell
+    # with `mkdir -Force "$CI_PROJECT_DIR/tmp"`
+    - mkdir -p "$CI_PROJECT_DIR/tmp"
 
 # Cached directories shared between jobs & pipelines per-branch per-runner
 cache:
@@ -41,18 +48,7 @@ stages:
   - build       # Cross-platform library compilation, unit tests
 
 image: registry.gitlab.com/matrixai/engineering/maintenance/gitlab-runner
-EOF
 
-printf "\n"
-
-# Using shards to optimise tests
-# In the future we can incorporate test durations rather than using
-# a static value for the parallel keyword
-
-# Number of parallel shards to split the test suite into
-CI_PARALLEL=2
-
-cat << "EOF"
 build:linux:
   stage: build
   needs: []
@@ -64,7 +60,7 @@ cat << "EOF"
   script:
     - >
       nix-shell --run '
-      npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL;
+      npm test -- --ci --coverage --shard="$CI_NODE_INDEX/$CI_NODE_TOTAL";
       '
   artifacts:
     when: always
@@ -75,11 +71,7 @@ cat << "EOF"
         coverage_format: cobertura
         path: ./tmp/coverage/cobertura-coverage.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
-EOF
 
-printf "\n"
-
-cat << "EOF"
 build:windows:
   stage: build
   needs: []
@@ -97,7 +89,7 @@ cat << "EOF"
     - refreshenv
     - npm install --ignore-scripts
     - $env:Path = "$(npm bin);" + $env:Path
-    - npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL --maxWorkers=50%
+    - npm test -- --ci --coverage --shard="$CI_NODE_INDEX/$CI_NODE_TOTAL"
   artifacts:
     when: always
     reports:
@@ -107,11 +99,7 @@ cat << "EOF"
         coverage_format: cobertura
         path: ./tmp/coverage/cobertura-coverage.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
-EOF
 
-printf "\n"
-
-cat << "EOF"
 build:macos:
   stage: build
   needs: []
@@ -129,7 +117,7 @@ cat << "EOF"
     - hash -r
     - npm install --ignore-scripts
     - export PATH="$(npm bin):$PATH"
-    - npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL --maxWorkers=50%
+    - npm test -- --ci --coverage --shard="$CI_NODE_INDEX/$CI_NODE_TOTAL"
   artifacts:
     when: always
     reports:
@@ -140,5 +128,3 @@ cat << "EOF"
         path: ./tmp/coverage/cobertura-coverage.xml
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 EOF
-
-printf "\n"

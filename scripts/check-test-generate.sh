@@ -3,15 +3,15 @@
 shopt -s globstar
 shopt -s nullglob
 
+# Using shards to optimise tests
+# In the future we can incorporate test durations rather than using
+# a static value for the parallel keyword
+
+# Number of parallel shards to split the test suite into
+CI_PARALLEL=2
+
 # Quote the heredoc to prevent shell expansion
 cat << "EOF"
-default:
-  interruptible: true
-  before_script:
-    # Replace this in windows runners that use powershell
-    # with `mkdir -Force "$CI_PROJECT_DIR/tmp"`
-    - mkdir -p "$CI_PROJECT_DIR/tmp"
-
 variables:
   GIT_SUBMODULE_STRATEGY: "recursive"
   GH_PROJECT_PATH: "MatrixAI/${CI_PROJECT_NAME}"
@@ -20,6 +20,15 @@ variables:
   NPM_CONFIG_CACHE: "./tmp/npm"
   # Prefer offline node module installation
   NPM_CONFIG_PREFER_OFFLINE: "true"
+  # Homebrew cache only used by macos runner
+  HOMEBREW_CACHE: "${CI_PROJECT_DIR}/tmp/Homebrew"
+
+default:
+  interruptible: true
+  before_script:
+    # Replace this in windows runners that use powershell
+    # with `mkdir -Force "$CI_PROJECT_DIR/tmp"`
+    - mkdir -p "$CI_PROJECT_DIR/tmp"
 
 # Cached directories shared between jobs & pipelines per-branch per-runner
 cache:
@@ -39,18 +48,7 @@ stages:
   - check       # Linting, unit tests
 
 image: registry.gitlab.com/matrixai/engineering/maintenance/gitlab-runner
-EOF
 
-printf "\n"
-
-# Using shards to optimise tests
-# In the future we can incorporate test durations rather than using
-# a static value for the parallel keyword
-
-# Number of parallel shards to split the test suite into
-CI_PARALLEL=2
-
-cat << "EOF"
 check:test:
   stage: check
   needs: []
@@ -62,7 +60,7 @@ cat << "EOF"
   script:
     - >
       nix-shell --run '
-      npm test -- --ci --coverage --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL;
+      npm test -- --ci --coverage --shard="$CI_NODE_INDEX/$CI_NODE_TOTAL";
       '
   artifacts:
     when: always
