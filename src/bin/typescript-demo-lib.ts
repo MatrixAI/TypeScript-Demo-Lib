@@ -1,14 +1,10 @@
 #!/usr/bin/env node
 
-import * as os from 'os';
 import process from 'process';
 import { v4 as uuidv4 } from 'uuid';
 import Library from '../lib/Library';
 import NumPair from '../lib/NumPair';
-import testLevel from '../lib/test-level';
-import testUtpNative from '../lib/test-utp-native';
 import testWorkers from '../lib/workers/test-workers';
-import { testFdLock } from '../lib/test-fd-lock';
 import { version, test } from '../utils';
 
 async function main(argv = process.argv): Promise<number> {
@@ -26,21 +22,19 @@ async function main(argv = process.argv): Promise<number> {
 
   // Add the first two command-line args and print the result
   // default to using 0
-  const nums = new NumPair(parseInt(argv[0] ?? 0), parseInt(argv[1] ?? 0));
+  let num1 = parseInt(argv[0]);
+  num1 = isNaN(num1) ? 0 : num1;
+  let num2 = parseInt(argv[1]);
+  num2 = isNaN(num2) ? 0 : num2;
+  const nums = new NumPair(num1, num2);
   const sum = nums.num1 + nums.num2;
   process.stdout.write(nums.num1 + ' + ' + nums.num2 + ' = ' + sum + '\n');
 
-  // Testing native modules
-  const dir = argv[2] ?? os.tmpdir();
-  await testLevel(dir);
+  // Testing workers
   await testWorkers();
-  await testUtpNative();
 
   process.stdout.write(version + '\n');
   process.stdout.write(test.toString() + '\n');
-
-  // Testing fd-lock
-  await testFdLock(dir);
 
   process.exitCode = 0;
   return process.exitCode;
