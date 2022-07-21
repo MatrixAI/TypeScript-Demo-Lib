@@ -59,7 +59,7 @@ EOF
 cat << "EOF"
   script:
     - >
-      nix-shell --run '
+      nix-shell --arg ci true --run $'
       npm test -- --ci --coverage --shard="$CI_NODE_INDEX/$CI_NODE_TOTAL";
       '
   artifacts:
