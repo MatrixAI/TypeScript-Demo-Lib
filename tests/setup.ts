@@ -6,5 +6,7 @@ process.stderr._handle.setBlocking(true);
 console.log(process.stdout.isTTY);
 console.log(process.stderr.isTTY);
 
+// @ts-ignore windows
 console.log(process.stdout._handle);
+// @ts-ignore windows
 console.log(process.stderr._handle);
