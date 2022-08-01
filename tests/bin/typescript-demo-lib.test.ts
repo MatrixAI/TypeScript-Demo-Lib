@@ -4,22 +4,6 @@ import path from 'path';
 import { mockProcessStdout } from 'jest-mock-process';
 import main from '@/bin/typescript-demo-lib';
 
-if (process.stdout.isTTY) {
-  // @ts-ignore
-  process.stdout._handle.setBlocking(true);
-} else if (os.platform() === 'win32' && !process.stdout.isTTY) {
-  // @ts-ignore
-  process.stdout._handle.setBlocking(false);
-}
-
-if (process.stderr.isTTY) {
-  // @ts-ignore
-  process.stderr._handle.setBlocking(true);
-} else if (os.platform() === 'win32' && !process.stderr.isTTY) {
-  // @ts-ignore
-  process.stderr._handle.setBlocking(false);
-}
-
 const uuidRegex = new RegExp(
   '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}',
 );
