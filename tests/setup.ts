@@ -1,7 +1,7 @@
 // @ts-ignore windows
-process.stdout._handle.setBlocking(true);
+process.stdout._handle.setBlocking(false);
 // @ts-ignore windows
-process.stderr._handle.setBlocking(true);
+process.stderr._handle.setBlocking(false);
 
 console.log(process.stdout.isTTY);
 console.log(process.stderr.isTTY);
