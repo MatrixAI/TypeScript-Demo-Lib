@@ -3,7 +3,22 @@ import os from 'os';
 import path from 'path';
 import { mockProcessStdout } from 'jest-mock-process';
 import main from '@/bin/typescript-demo-lib';
-import { sleep } from '@/utils';
+
+if (process.stdout.isTTY) {
+  // @ts-ignore
+  process.stdout._handle.setBlocking(true);
+} else if (os.platform() === 'win32' && !process.stdout.isTTY) {
+  // @ts-ignore
+  process.stdout._handle.setBlocking(false);
+}
+
+if (process.stderr.isTTY) {
+  // @ts-ignore
+  process.stderr._handle.setBlocking(true);
+} else if (os.platform() === 'win32' && !process.stderr.isTTY) {
+  // @ts-ignore
+  process.stderr._handle.setBlocking(false);
+}
 
 const uuidRegex = new RegExp(
   '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}',
@@ -26,7 +41,6 @@ describe('main', () => {
     const mockLog = mockProcessStdout();
     expect(await main(['', '', '1', '2', dataDir])).toEqual(0);
     mockLog.mockRestore();
-    await sleep(2000);
   });
   test('no input', async () => {
     const mockLog = mockProcessStdout();
@@ -47,7 +61,6 @@ describe('main', () => {
     expect(tmpMockLog).toMatch(uuidRegex);
     expect(tmpMockLog).toContain('0 + 0 = 0\n');
     mockLog.mockRestore();
-    await sleep(2000);
   });
   test('adds 0 + 1', async () => {
     const mockLog = mockProcessStdout();
@@ -58,7 +71,6 @@ describe('main', () => {
     expect(tmpMockLog).toMatch(uuidRegex);
     expect(tmpMockLog).toContain('0 + 1 = 1\n');
     mockLog.mockRestore();
-    await sleep(2000);
   });
   test('adds 1 + 0', async () => {
     const mockLog = mockProcessStdout();
@@ -69,7 +81,6 @@ describe('main', () => {
     expect(tmpMockLog).toMatch(uuidRegex);
     expect(tmpMockLog).toContain('1 + 0 = 1\n');
     mockLog.mockRestore();
-    await sleep(2000);
   });
   test('adds 7657 + 238947', async () => {
     const mockLog = mockProcessStdout();
@@ -80,6 +91,5 @@ describe('main', () => {
     expect(tmpMockLog).toMatch(uuidRegex);
     expect(tmpMockLog).toContain('7657 + 238947 = 246604\n');
     mockLog.mockRestore();
-    await sleep(2000);
   });
 });
