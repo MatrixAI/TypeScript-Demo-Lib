@@ -49,6 +49,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
+    "jest-extended": "^3.0.1",
     "jest-junit": "^14.0.0",
     "jest-mock-process": "^2.0.0",
     "node-gyp-build": "^4.4.0",
