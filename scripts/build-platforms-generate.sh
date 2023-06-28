@@ -113,8 +113,8 @@ cat << EOF
 EOF
 cat << "EOF"
   tags:
-    - shared-macos-amd64
-  image: macos-11-xcode-12
+    - saas-macos-medium-m1
+  image: macos-12-xcode-14
   script:
     - eval "$(brew shellenv)"
     - ./scripts/brew-install.sh
