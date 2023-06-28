@@ -86,7 +86,7 @@ rec {
         sha256 = "1d51w02m5jv7fgk3brkv3wizn1l75rai1zyq8m9vlm1za1gaha8p";
       };
       "macos-x64" = fetchurl {
-        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-macos-x64";
+        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.5/node-v18.15.0-macos-x64";
         sha256 = "1qcih9l3vncg05glhr45avcz2p5sqk7sp9776q4133xg88s09k0k";
       };
       # No build for v18.15.0 macos-arm64 build
