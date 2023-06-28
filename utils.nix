@@ -76,28 +76,29 @@ rec {
     '';
   });
   pkgBuilds = {
-    "3.4" = {
+    "3.5" = {
       "linux-x64" = fetchurl {
-        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-linux-x64";
-        sha256 = "sR98InYftgwoXMU6I1Jt9+flVmMy06Xdgpi/lcudU9A=";
+        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.5/node-v18.15.0-linux-x64";
+        sha256 = "0glr88p9higdwsffg3l243kpixqcf1mb7fawq62rj9n7b275lwx4";
       };
       "win32-x64" = fetchurl {
-        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-win-x64";
-        sha256 = "tH4L7ENiaBbVVNbVDSiRMayGpleNp91pFiCPNKiFqpc=";
+        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.5/node-v18.15.0-win-x64";
+        sha256 = "1d51w02m5jv7fgk3brkv3wizn1l75rai1zyq8m9vlm1za1gaha8p";
       };
       "macos-x64" = fetchurl {
         url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-macos-x64";
-        sha256 = "PlOsskHRucHXPz9Ip2BMYNpJR+TTdlG77A0GMB4jNts=";
+        sha256 = "1qcih9l3vncg05glhr45avcz2p5sqk7sp9776q4133xg88s09k0k";
       };
-      "macos-arm64" = fetchurl {
-        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-macos-arm64";
-        sha256 = "VNCPKjPQjLhzyX8d/FJ/dvDQcA9Gv9YZ6Wf2EcDCARI=";
-      };
+      # No build for v18.15.0 macos-arm64 build
+      # "macos-arm64" = fetchurl {
+      #   url = "https://github.com/vercel/pkg-fetch/releases/download/v3.4/node-v16.15.0-macos-arm64";
+      #   sha256 = "VNCPKjPQjLhzyX8d/FJ/dvDQcA9Gv9YZ6Wf2EcDCARI=";
+      # };
     };
   };
   pkgCachePath =
     let
-      pkgBuild = pkgBuilds."3.4";
+      pkgBuild = pkgBuilds."3.5";
       fetchedName = n: builtins.replaceStrings ["node"] ["fetched"] n;
     in
       linkFarm "pkg-cache"
@@ -114,9 +115,10 @@ rec {
             name = fetchedName pkgBuild.macos-x64.name;
             path = pkgBuild.macos-x64;
           }
-          {
-            name = fetchedName pkgBuild.macos-arm64.name;
-            path = pkgBuild.macos-arm64;
-          }
+          # No build for v18.15 macos-arm64 build
+          # {
+          #   name = fetchedName pkgBuild.macos-arm64.name;
+          #   path = pkgBuild.macos-arm64;
+          # }
         ];
 }

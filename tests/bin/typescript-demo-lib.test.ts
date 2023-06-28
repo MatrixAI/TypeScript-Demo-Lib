@@ -4,14 +4,6 @@ import path from 'path';
 import { mockProcessStdout } from 'jest-mock-process';
 import main from '@/bin/typescript-demo-lib';
 
-console.log('TEST MODULE');
-console.log(process.stdout.isTTY);
-console.log(process.stderr.isTTY);
-// @ts-ignore windows
-console.log(process.stdout._handle);
-// @ts-ignore windows
-console.log(process.stderr._handle);
-
 const uuidRegex = new RegExp(
   '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}',
 );
