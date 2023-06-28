@@ -2,6 +2,7 @@
 , linkFarm
 , nix-gitignore
 , nodejs
+, node2nix
 , pkgs
 , lib
 , fetchurl
@@ -28,14 +29,6 @@ rec {
     "/jest.config.js"
   ] ./.;
   nodeVersion = builtins.elemAt (lib.versions.splitVersion nodejs.version) 0;
-  # Custom node2nix directly from GitHub
-  node2nixSrc = fetchFromGitHub {
-    owner = "svanderburg";
-    repo = "node2nix";
-    rev = "9377fe4a45274fab0c7faba4f7c43ffae8421dd2";
-    sha256 = "15zip9w9hivd1p6k82hh4zba02jj6q0g2f1i9b7rrn2hs70qdlai";
-  };
-  node2nix = (import "${node2nixSrc}/release.nix" {}).package.x86_64-linux;
   node2nixDrv = dev: runCommandNoCC "node2nix" {} ''
     mkdir $out
     ${node2nix}/bin/node2nix \
